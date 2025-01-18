@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import DrawingComponent from '../components/DrawingComponent';
+import Banner from '../components/Banner';
 
 function App() {
   const [mapHtml, setMapHtml] = useState<string>('');
@@ -11,16 +12,16 @@ function App() {
       .then(data => setMapHtml(data.map))
       .catch(error => console.error('Error fetching map:', error));
   }, []);
-  
-  const [count, setCount] = useState(0)
-
   return (
     <div className="App">
-      {/* Display the Leaflet map */}
-      <DrawingComponent/>
-      
-      {/* Display the Folium map */}
-      <div dangerouslySetInnerHTML={{ __html: mapHtml }} />
+      <Banner />
+      <div className="content">
+        {/* Display the Leaflet map */}
+        <DrawingComponent canvasWidth={400} canvasHeight={600}/>
+        
+        {/* Display the Folium map */}
+        <div dangerouslySetInnerHTML={{ __html: mapHtml }} />
+      </div>
     </div>
   )
 }

@@ -1,23 +1,30 @@
 import React, { useRef } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 
-const DrawingComponent: React.FC = () => {
+interface DrawingComponentProps {
+  canvasWidth: number;
+  canvasHeight: number;
+}
+
+const DrawingComponent: React.FC<DrawingComponentProps> = ({canvasWidth, canvasHeight}) => {
   const canvasRef = useRef<CanvasDraw>(null);
 
   const exportDrawingAsPng = () => {
     if (canvasRef.current) {
-      const dataUrl = canvasRef.current.canvas.drawing.toDataURL();
-      const link = document.createElement('a');
-      link.download = 'drawing.png';
-      link.href = dataUrl;
-      link.click();
+      const jsonData = canvasRef.current.getSaveData();
+      console.log(jsonData);
     }
   };
 
   return (
-    <div>
-      <CanvasDraw ref={canvasRef} canvasWidth={800} canvasHeight={600} />
-      <button onClick={exportDrawingAsPng}>Export Drawing as PNG</button>
+    <div className="drawing-container">
+      <CanvasDraw 
+        ref={canvasRef} 
+        canvasWidth={canvasWidth} 
+        canvasHeight={canvasHeight}
+        className="canvas-draw" 
+      />
+      <button className="button" onClick={exportDrawingAsPng}>Export Drawing as PNG</button>
     </div>
   );
 };
