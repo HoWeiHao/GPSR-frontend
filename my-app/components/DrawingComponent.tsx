@@ -15,6 +15,11 @@ const DrawingComponent: React.FC<DrawingComponentProps> = ({canvasWidth, canvasH
       console.log(jsonData);
     }
   };
+  const clearDrawing = () => {
+    if (canvasRef.current) {
+      canvasRef.current.clear();
+    }
+  };
 
   return (
     <div className="drawing-container">
@@ -25,6 +30,8 @@ const DrawingComponent: React.FC<DrawingComponentProps> = ({canvasWidth, canvasH
         className="canvas-draw" 
       />
       <button className="button" onClick={exportDrawingAsPng}>Export Drawing as PNG</button>
+      <button className="button" onClick={clearDrawing}>Export gpx</button>
+      <button className="button" onClick={clearDrawing}>Clear Drawing</button>
     </div>
   );
 };
