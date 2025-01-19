@@ -14,7 +14,23 @@ function App() {
       .catch((error) => console.error("Error fetching map:", error));
   }, [routes]);
 
-  const handleDrawingUpdate = async (updatedRoutes: number[][][]) => {
+  const handleDrawingUpdate = async (updatedRoutes: number[][][] | null) => {
+    if (!updatedRoutes) {
+      try {
+        const response = await fetch("http://localhost:5000/api/clear_map", {
+          method: "POST",
+        });
+  
+        if (!response.ok) {
+          console.error("Failed to clear the map.");
+        }
+      } catch (error) {
+        console.error("Error sending clear_map request:", error);
+      }
+
+      setRoutes([]); // Update the state with an empty array
+      return;
+    }
     // Send the updated routes to the map server
     try {
       const response = await fetch("http://localhost:5000/api/update_map", {

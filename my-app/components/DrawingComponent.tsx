@@ -4,7 +4,7 @@ import CanvasDraw from "react-canvas-draw";
 interface DrawingComponentProps {
   canvasWidth: number;
   canvasHeight: number;
-  onDrawingUpdate: (routes: number[][][]) => void;
+  onDrawingUpdate: (routes: number[][][] | null) => void;
 }
 
 const DrawingComponent: React.FC<DrawingComponentProps> = ({
@@ -14,28 +14,33 @@ const DrawingComponent: React.FC<DrawingComponentProps> = ({
 }) => {
   const canvasRef = useRef<CanvasDraw>(null);
 
-  const exportDrawingAsPng = async () => {
+  const visualizeOnMap = async () => {
     if (canvasRef.current) {
       const jsonData = canvasRef.current.getSaveData();
       console.log(jsonData);
 
-      const response = await fetch("http://localhost:8888/api/points_to_route", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonData,
-      });
+      const response = await fetch(
+        "http://localhost:8888/api/points_to_route",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonData,
+        }
+      );
 
-      const data = await response.json()
+      const data = await response.json();
 
-      onDrawingUpdate(data.routes)
+      onDrawingUpdate(data.routes);
     }
   };
-  const clearDrawing = () => {
+  const clearDrawing = async () => {
     if (canvasRef.current) {
       canvasRef.current.clear();
     }
+
+    onDrawingUpdate(null);
   };
 
   return (
@@ -44,12 +49,17 @@ const DrawingComponent: React.FC<DrawingComponentProps> = ({
         ref={canvasRef}
         canvasWidth={canvasWidth}
         canvasHeight={canvasHeight}
+        brushRadius={5}
         className="canvas-draw"
       />
-      <button className="button" onClick={exportDrawingAsPng}>Export Drawing as PNG</button>
-      
-      <button className="button" onClick={clearDrawing}>Export gpx</button>
-      <button className="button" onClick={clearDrawing}>Clear Drawing</button>
+      <div className="button-container">
+        <button className="button" onClick={visualizeOnMap}>
+          Visualize On Map
+        </button>
+        <button className="button" onClick={clearDrawing}>
+          Clear Drawing
+        </button>
+      </div>
     </div>
   );
 };
