@@ -42,12 +42,17 @@ function App() {
         {/* Display the Leaflet map */}
         <DrawingComponent
           canvasWidth={400}
-          canvasHeight={600}
+          canvasHeight={400}
           onDrawingUpdate={handleDrawingUpdate}
         />
 
         {/* Display the Folium map */}
-        <div dangerouslySetInnerHTML={{ __html: mapHtml }} />
+        <div className="map-container">
+          <div dangerouslySetInnerHTML={{ __html: mapHtml }} style={{
+            width: "75vw",
+            border: "1px solid black",
+          }} />
+        </div>
       </div>
     </div>
   );
